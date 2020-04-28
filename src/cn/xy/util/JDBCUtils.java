@@ -1,6 +1,7 @@
 package cn.xy.util;
 import com.mysql.jdbc.Driver;
 import java.sql.*;
+import java.util.ResourceBundle;
 
 /**
  * JDBC工具类
@@ -12,12 +13,14 @@ public class JDBCUtils {
     //２.提供静态的getConnection方法，封装１，２步
     public static Connection getConnection(){
         try{
+            //a.读取属性文件
+            ResourceBundle rb = ResourceBundle.getBundle("JDBC");
             //1.注册驱动
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName(rb.getString("DriverClass"));
             //2.获取数据库连接
-            String url = "JDBC:mysql:///jt_db";
-            String user = "root";
-            String password = "1234567";
+            String url = rb.getString("jdbcUrl");
+            String user = rb.getString("user");
+            String password = rb.getString("password");
             return DriverManager.getConnection(url,user,password);
         }catch(Exception e){
             e.printStackTrace();
