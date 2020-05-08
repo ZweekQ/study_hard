@@ -1,6 +1,6 @@
-package cn.xm.test;
+package cn.test;
 
-import cn.xy.util.JDBCUtils;
+import cn.ToolSutil.JDBCUtils;
 import org.junit.Test;
 
 
