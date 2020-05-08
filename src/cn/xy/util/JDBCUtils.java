@@ -1,5 +1,4 @@
 package cn.xy.util;
-import com.mysql.jdbc.Driver;
 import java.sql.*;
 import java.util.ResourceBundle;
 
@@ -10,11 +9,16 @@ public class JDBCUtils {
     //1.创建静态的工具方法
     private JDBCUtils(){
     }
+    //申明为成员变量，以便整个类使用,设置为静态成员是因为，静态代码块只能引用静态上下文
+    static ResourceBundle rb = null;
+    //在静态代码块加载一次属性文件，不用每次时用都加载一次,不用每次调用GetCoonetion方法都加载一起属性文件。
+    static{
+        //读取属性文件
+        rb = ResourceBundle.getBundle("JDBC");
+    }
     //２.提供静态的getConnection方法，封装１，２步
     public static Connection getConnection(){
         try{
-            //a.读取属性文件
-            ResourceBundle rb = ResourceBundle.getBundle("JDBC");
             //1.注册驱动
             Class.forName(rb.getString("DriverClass"));
             //2.获取数据库连接
