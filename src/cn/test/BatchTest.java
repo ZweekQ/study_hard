@@ -22,10 +22,11 @@ public class BatchTest {
             //1,注册驱动 2,获取数据库链接
             long start = System.currentTimeMillis();//获取当时间的毫秒数
             conn = JDBCUtils.getConnection();
+            //关闭jdbc提交事务
+            assert conn != null;
+            conn.setAutoCommit(false);
             //3.获取传输器
-            if (conn != null) {
-                st = conn.createStatement();
-            }
+            st = conn.createStatement();
             //4.执行sql
             for (int i=0;i<100;i++){
             String sql = "insert into customer values (null,'wang"+i+"',33333"+i+")";
@@ -40,6 +41,8 @@ public class BatchTest {
             }
             long end = System.currentTimeMillis();
             System.out.println(end - start);
+            //自动提交事务
+            conn.commit();
         }catch(Exception e){
             e.printStackTrace();
         }finally {
@@ -53,14 +56,17 @@ public class BatchTest {
         Connection conn = null;
         PreparedStatement ps = null;
         try{
-        //1.注册驱动，获取数据库链接
-        conn = JDBCUtils.getConnection();
-        //3.获取传输器
+            //获取程序启动的时候的毫秒值
+            long start = System.currentTimeMillis();
+            //1.注册驱动，获取数据库链接
+            conn = JDBCUtils.getConnection();
+            //关闭jdbc自动事务提交
+            assert conn != null;
+            conn.setAutoCommit(false);
+            //3.获取传输器
             String sql = "insert into customer values (null,?,?)";
-            if (conn != null) {
-                //获取预编译对象preparedStatement对象
-                ps = conn.prepareStatement(sql);
-            }
+            //获取预编译对象preparedStatement对象
+            ps = conn.prepareStatement(sql);
             //设置参数
             for (int x=0;x<100;x++) {
                 if (ps != null) {
@@ -70,11 +76,15 @@ public class BatchTest {
                     ps.addBatch();
                 }
             }
-        //批量提交到数据库
+            //批量提交到数据库
             if (ps != null) {
                 int[] rows = ps.executeBatch();
                 System.out.println(Arrays.toString(rows));
             }
+            //手动提交事务
+            conn.commit();
+            long end = System.currentTimeMillis();
+            System.out.println(end-start);
         }catch(Exception e){
             e.printStackTrace();
         }finally {
