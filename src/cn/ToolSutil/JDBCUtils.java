@@ -1,4 +1,6 @@
 package cn.ToolSutil;
+import cn.pool.MyPool;
+
 import java.sql.*;
 import java.util.ResourceBundle;
 
@@ -16,7 +18,6 @@ public class JDBCUtils {
         //读取属性文件
         rb = ResourceBundle.getBundle("JDBC");
     }
-
     //２.提供静态的getConnection方法，封装１，２步
     public static Connection getConnection(){
         try{
